@@ -9,54 +9,39 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.bind.annotation.RequestBody;
 
-
-import com.example.sns.entity.Comment;
-import com.example.sns.entity.Post;
-import com.example.sns.repository.CommentRepository;
-import com.example.sns.repository.PostRepository;
+import com.example.sns.dto.CommentRequestDto;
+import com.example.sns.dto.CommentResponseDto;
+import com.example.sns.service.CommentService;
 
 import java.util.List;
 
 @RestController
 @RequestMapping("/posts/{postId}/comments")
 public class CommentController {
-    private final CommentRepository commentRepository;
-    private final PostRepository postRepository;
+    private final CommentService commentService;
 
-    public CommentController(CommentRepository commentRepository, PostRepository postRepository){
-        this.commentRepository = commentRepository;
-        this.postRepository = postRepository;
+    public CommentController(CommentService commentService){
+        this.commentService = commentService;
     }
 
     @PostMapping
-    public Comment createComment(@PathVariable Long postId, @RequestBody Comment comment){
-        Post post = postRepository.findById(postId)
-            .orElseThrow(() -> new IllegalArgumentException("잘못된 게시글 입니다."));
-
-        comment.setPost(post);
-        return commentRepository.save(comment);
+    public CommentResponseDto createComment(@PathVariable("postId") Long postId, @RequestBody CommentRequestDto requestDto){
+        return commentService.createComment(postId, requestDto);
     }
 
     @GetMapping
-    public List<Comment> getCommentsByPost(@PathVariable Long postId){
-        return commentRepository.findAllByPostId(postId);
+    public List<CommentResponseDto> getCommentsByPost(@PathVariable("postId") Long postId){
+        return commentService.getCommentByPost(postId);
     }
 
     @PutMapping("/{commentId}")
-    public Comment updateComment(@PathVariable Long commentId, @RequestBody Comment updateComment){
-        Comment existingComment = commentRepository.findById(commentId)
-            .orElseThrow(() -> new IllegalArgumentException("잘못된 댓글입니다."));
-
-        existingComment.setContent(updateComment.getContent());
-
-        return commentRepository.save(existingComment);
+    public CommentResponseDto updateComment(@PathVariable("commentId") Long commentId, @RequestBody CommentRequestDto  requestDto){
+        return commentService.updateComment(commentId, requestDto);
     }
 
     @DeleteMapping("/{commentId}")
-    public void deleteComment(@PathVariable Long commentId){
-        Comment existingComment = commentRepository.findById(commentId)
-            .orElseThrow(() -> new IllegalArgumentException("삭제할 댓글이 없습니다."));
-
-        commentRepository.delete(existingComment);
+    public String deleteComment(@PathVariable("commentId") Long commentId){
+        commentService.deleteComment(commentId);
+        return "댓글이 성공적으로 삭제되었습니다.";
     }
 }

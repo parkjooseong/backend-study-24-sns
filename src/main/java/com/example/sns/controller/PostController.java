@@ -1,46 +1,44 @@
 package com.example.sns.controller;
 import org.springframework.web.bind.annotation.*;
-import com.example.sns.entity.Post;
-import com.example.sns.repository.PostRepository;
+
+import com.example.sns.dto.PostRequestDto;
+import com.example.sns.dto.PostResponseDto;
+import com.example.sns.service.PostService;
 import java.util.List;
+
 @RestController
 @RequestMapping("/posts")
 public class PostController {
-    private final PostRepository postRepository;
+    private final PostService postService;
 
-    public PostController(PostRepository postRepository) {
-        this.postRepository = postRepository;
+    public PostController(PostService postRepository) {
+        this.postService = postRepository;
     }
 
     @PostMapping
-    public Post createPost(@RequestBody Post post){
-        return postRepository.save(post);
+    public PostResponseDto createPost(@RequestBody PostRequestDto requestDto){
+        return postService.createPost(requestDto);
     }
 
     @GetMapping
-    public List<Post> getAllPosts() {
-        return postRepository.findAll();
+    public List<PostResponseDto> getAllPosts() {
+        return postService.getAllPosts();
     }
 
     @GetMapping("/{id}")
-    public Post getPostById(@PathVariable Long id){
-        return postRepository.findById(id).orElseThrow(() -> new IllegalArgumentException("잘못된 번호입니다."));
+    public PostResponseDto getPostById(@PathVariable("id") Long id){
+        return postService.getPostById(id);
     }
 
     @PutMapping("/{id}")
-    public Post updatePost(@PathVariable Long id, @RequestBody Post updatePost) {
-        Post existingPost = postRepository.findById(id)
-            .orElseThrow(() -> new IllegalArgumentException("잘못된 번호입니다."));
-        existingPost.setTitle(updatePost.getTitle());
-        existingPost.setContent(updatePost.getContent());
-
-        return postRepository.save(existingPost);
+    public PostResponseDto updatePost(@PathVariable("id") Long id, @RequestBody PostRequestDto requestDto) {
+        return postService.updatePost(id, requestDto);
     }
 
     @DeleteMapping("/{id}")
-    public void deletePost(@PathVariable Long id){
-        Post existingPost = postRepository.findById(id)
-            .orElseThrow(()-> new IllegalArgumentException("삭제할 게시물이 없습니다"));
-        postRepository.delete(existingPost);
+    public String deletePost(@PathVariable("id") Long id){
+        postService.deletePost(id);
+
+        return "게시글이 성공적으로 삭제되었습니다.";
     }
 }
