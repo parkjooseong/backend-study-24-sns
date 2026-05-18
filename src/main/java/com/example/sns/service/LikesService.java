@@ -1,5 +1,6 @@
 package com.example.sns.service;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -20,6 +21,7 @@ public class LikesService {
     private final PostRepository postRepository;
     private final UserRepository userRepository;
 
+    @Autowired
     public LikesService(LikesRepository likesRepository, PostRepository postRepository, UserRepository userRepository){
         this.likesRepository = likesRepository;
         this.postRepository = postRepository;

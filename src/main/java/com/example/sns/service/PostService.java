@@ -1,5 +1,6 @@
 package com.example.sns.service;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -15,6 +16,7 @@ import java.util.stream.Collectors;
 public class PostService {
     private final PostRepository postRepository;
 
+    @Autowired
     public PostService(PostRepository postRepository){
         this.postRepository = postRepository;
     }

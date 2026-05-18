@@ -3,6 +3,7 @@ package com.example.sns.service;
 import java.util.List;
 import java.util.stream.Collectors;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -19,6 +20,7 @@ public class CommentService {
     private final CommentRepository commentRepository;
     private final PostRepository postRepository;
 
+    @Autowired
     public CommentService(CommentRepository commentRepository, PostRepository postRepository){
         this.commentRepository = commentRepository;
         this.postRepository = postRepository;
