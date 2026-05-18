@@ -1,7 +1,7 @@
 package com.example.sns.entity;
 
 import jakarta.persistence.Entity;
-
+import jakarta.persistence.FetchType;
 import jakarta.persistence.GeneratedValue;
 
 import jakarta.persistence.GenerationType;
@@ -19,7 +19,7 @@ public class Post {
     private String title;     
     private String content;
 
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "user_id")
     private User user;
 
