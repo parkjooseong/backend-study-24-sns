@@ -1,5 +1,7 @@
 package com.example.sns.service;
 
+import java.util.Optional;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -35,10 +37,10 @@ public class LikesService {
         User user = userRepository.findById(requestDto.userId())
             .orElseThrow(() -> new IllegalArgumentException("유효한 사용자가 아닙니다."));
 
-        Likes existingLike = likesRepository.findByPostIdAndUserId(postId, requestDto.userId());
+        Optional<Likes> existingLike = likesRepository.findByPostIdAndUserId(postId, requestDto.userId());
 
-        if(existingLike != null){
-            likesRepository.delete(existingLike);
+        if(existingLike.isPresent()){
+            likesRepository.delete(existingLike.get());
             return new LikesResponseDto("좋아요를 취소했습니다.");
         }else{
             Likes newLike = Likes.createLike(user, post);
