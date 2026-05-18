@@ -1,6 +1,7 @@
 package com.example.sns.service;
 
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import com.example.sns.dto.LikesRequestDto;
 import com.example.sns.dto.LikesResponseDto;
@@ -11,7 +12,9 @@ import com.example.sns.repository.LikesRepository;
 import com.example.sns.repository.PostRepository;
 import com.example.sns.repository.UserRepository;
 
+
 @Service
+@Transactional(readOnly = true)
 public class LikesService {
     private final LikesRepository likesRepository;
     private final PostRepository postRepository;
@@ -22,7 +25,7 @@ public class LikesService {
         this.postRepository = postRepository;
         this.userRepository = userRepository;
     }
-
+    @Transactional
     public LikesResponseDto toggleLike(Long postId, LikesRequestDto requestDto){
         Post post = postRepository.findById(postId)
             .orElseThrow(() -> new IllegalArgumentException("유효한 게시물이 아닙니다."));

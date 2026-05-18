@@ -1,6 +1,7 @@
 package com.example.sns.service;
 
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import com.example.sns.dto.PostRequestDto;
 import com.example.sns.dto.PostResponseDto;
@@ -10,13 +11,14 @@ import com.example.sns.repository.PostRepository;
 import java.util.List;
 import java.util.stream.Collectors;
 @Service
+@Transactional(readOnly = true)
 public class PostService {
     private final PostRepository postRepository;
 
     public PostService(PostRepository postRepository){
         this.postRepository = postRepository;
     }
-
+    @Transactional
     public PostResponseDto createPost(PostRequestDto requestDto){
         Post post = Post.createPost(requestDto.title(), requestDto.content());
 
@@ -35,7 +37,7 @@ public class PostService {
             .orElseThrow(() -> new IllegalArgumentException("잘못된 번호 입니다."));
         return new PostResponseDto(post);
     }
-
+    @Transactional
     public PostResponseDto updatePost(Long id, PostRequestDto requestDto){
         Post post = postRepository.findById(id)
             .orElseThrow(() -> new IllegalArgumentException("잘못된 번호입니다."));
@@ -45,7 +47,7 @@ public class PostService {
         Post updatedPost = postRepository.save(post);
         return new PostResponseDto(updatedPost);
     }
-
+    @Transactional
     public void deletePost(Long id){
         Post post = postRepository.findById(id)
             .orElseThrow(() -> new IllegalArgumentException("삭제할 게시물이 없습니다."));
