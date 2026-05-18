@@ -1,4 +1,6 @@
 package com.example.sns.controller;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import com.example.sns.dto.PostRequestDto;
@@ -16,29 +18,32 @@ public class PostController {
     private final PostService postService;
 
     @PostMapping
-    public PostResponseDto createPost(@RequestBody PostRequestDto requestDto){
-        return postService.createPost(requestDto);
+    public ResponseEntity<PostResponseDto> createPost(@RequestBody PostRequestDto requestDto){
+        PostResponseDto responseDto = postService.createPost(requestDto);
+        return ResponseEntity.status(HttpStatus.CREATED).body(responseDto);
     }
 
     @GetMapping
-    public List<PostResponseDto> getAllPosts() {
-        return postService.getAllPosts();
+    public ResponseEntity<List<PostResponseDto>> getAllPosts() {
+        List<PostResponseDto> responseDtoList = postService.getAllPosts();
+        return ResponseEntity.ok(responseDtoList);
     }
 
     @GetMapping("/{id}")
-    public PostResponseDto getPostById(@PathVariable("id") Long id){
-        return postService.getPostById(id);
+    public ResponseEntity<PostResponseDto> getPostById(@PathVariable("id") Long id){
+        PostResponseDto responseDto = postService.getPostById(id);
+        return ResponseEntity.ok(responseDto);
     }
 
     @PutMapping("/{id}")
-    public PostResponseDto updatePost(@PathVariable("id") Long id, @RequestBody PostRequestDto requestDto) {
-        return postService.updatePost(id, requestDto);
+    public ResponseEntity<PostResponseDto> updatePost(@PathVariable("id") Long id, @RequestBody PostRequestDto requestDto) {
+        PostResponseDto responseDto = postService.updatePost(id, requestDto);
+        return ResponseEntity.ok(responseDto);
     }
 
     @DeleteMapping("/{id}")
-    public String deletePost(@PathVariable("id") Long id){
+    public ResponseEntity<Void> deletePost(@PathVariable("id") Long id){
         postService.deletePost(id);
-
-        return "게시글이 성공적으로 삭제되었습니다.";
+        return ResponseEntity.noContent().build();
     }
 }

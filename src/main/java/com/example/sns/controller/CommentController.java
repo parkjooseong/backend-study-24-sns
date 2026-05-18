@@ -1,5 +1,7 @@
 package com.example.sns.controller;
 
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -24,23 +26,26 @@ public class CommentController {
     private final CommentService commentService;
     
     @PostMapping
-    public CommentResponseDto createComment(@PathVariable("postId") Long postId, @RequestBody CommentRequestDto requestDto){
-        return commentService.createComment(postId, requestDto);
+    public ResponseEntity<CommentResponseDto> createComment(@PathVariable("postId") Long postId, @RequestBody CommentRequestDto requestDto){
+        CommentResponseDto responseDto = commentService.createComment(postId, requestDto);
+        return ResponseEntity.status(HttpStatus.CREATED).body(responseDto);
     }
 
     @GetMapping
-    public List<CommentResponseDto> getCommentsByPost(@PathVariable("postId") Long postId){
-        return commentService.getCommentByPost(postId);
+    public ResponseEntity<List<CommentResponseDto>> getCommentsByPost(@PathVariable("postId") Long postId){
+        List<CommentResponseDto> responseDtoList = commentService.getCommentByPost(postId);
+        return ResponseEntity.ok(responseDtoList);
     }
 
     @PutMapping("/{commentId}")
-    public CommentResponseDto updateComment(@PathVariable("commentId") Long commentId, @RequestBody CommentRequestDto  requestDto){
-        return commentService.updateComment(commentId, requestDto);
+    public ResponseEntity<CommentResponseDto> updateComment(@PathVariable("commentId") Long commentId, @RequestBody CommentRequestDto  requestDto){
+        CommentResponseDto responseDto = commentService.updateComment(commentId, requestDto);
+        return ResponseEntity.ok(responseDto);
     }
 
     @DeleteMapping("/{commentId}")
-    public String deleteComment(@PathVariable("commentId") Long commentId){
+    public ResponseEntity<Void> deleteComment(@PathVariable("commentId") Long commentId){
         commentService.deleteComment(commentId);
-        return "댓글이 성공적으로 삭제되었습니다.";
+        return ResponseEntity.noContent().build();
     }
 }
