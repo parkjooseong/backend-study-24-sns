@@ -7,6 +7,7 @@ import com.example.sns.dto.PostRequestDto;
 import com.example.sns.dto.PostResponseDto;
 import com.example.sns.service.PostService;
 
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 
 import java.util.List;
@@ -18,7 +19,7 @@ public class PostController {
     private final PostService postService;
 
     @PostMapping
-    public ResponseEntity<PostResponseDto> createPost(@RequestBody PostRequestDto requestDto){
+    public ResponseEntity<PostResponseDto> createPost(@Valid @RequestBody PostRequestDto requestDto){
         PostResponseDto responseDto = postService.createPost(requestDto);
         return ResponseEntity.status(HttpStatus.CREATED).body(responseDto);
     }
@@ -36,7 +37,7 @@ public class PostController {
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<PostResponseDto> updatePost(@PathVariable("id") Long id, @RequestBody PostRequestDto requestDto) {
+    public ResponseEntity<PostResponseDto> updatePost(@PathVariable("id") Long id, @Valid @RequestBody PostRequestDto requestDto) {
         PostResponseDto responseDto = postService.updatePost(id, requestDto);
         return ResponseEntity.ok(responseDto);
     }

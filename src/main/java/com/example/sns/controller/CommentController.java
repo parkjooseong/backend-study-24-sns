@@ -15,6 +15,7 @@ import com.example.sns.dto.CommentRequestDto;
 import com.example.sns.dto.CommentResponseDto;
 import com.example.sns.service.CommentService;
 
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 
 import java.util.List;
@@ -26,7 +27,7 @@ public class CommentController {
     private final CommentService commentService;
     
     @PostMapping
-    public ResponseEntity<CommentResponseDto> createComment(@PathVariable("postId") Long postId, @RequestBody CommentRequestDto requestDto){
+    public ResponseEntity<CommentResponseDto> createComment(@PathVariable("postId") Long postId, @Valid @RequestBody CommentRequestDto requestDto){
         CommentResponseDto responseDto = commentService.createComment(postId, requestDto);
         return ResponseEntity.status(HttpStatus.CREATED).body(responseDto);
     }
@@ -38,7 +39,7 @@ public class CommentController {
     }
 
     @PutMapping("/{commentId}")
-    public ResponseEntity<CommentResponseDto> updateComment(@PathVariable("commentId") Long commentId, @RequestBody CommentRequestDto  requestDto){
+    public ResponseEntity<CommentResponseDto> updateComment(@PathVariable("commentId") Long commentId, @Valid @RequestBody CommentRequestDto  requestDto){
         CommentResponseDto responseDto = commentService.updateComment(commentId, requestDto);
         return ResponseEntity.ok(responseDto);
     }

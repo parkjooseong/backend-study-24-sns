@@ -9,6 +9,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import com.example.sns.service.LikesService;
 
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 
 import com.example.sns.dto.LikesRequestDto;
@@ -22,7 +23,7 @@ public class LikesController {
     private final LikesService likesService;
 
     @PostMapping
-    public ResponseEntity<LikesResponseDto> toggleLike(@PathVariable("postId") Long postId, @RequestBody LikesRequestDto requestDto){
+    public ResponseEntity<LikesResponseDto> toggleLike(@PathVariable("postId") Long postId, @Valid @RequestBody LikesRequestDto requestDto){
         LikesResponseDto responseDto = likesService.toggleLike(postId, requestDto);
         return ResponseEntity.ok(responseDto);
     }
