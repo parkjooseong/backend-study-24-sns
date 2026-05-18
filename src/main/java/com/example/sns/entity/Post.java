@@ -18,10 +18,14 @@ public class Post {
     private Long id;  
     private String title;     
     private String content;
+
     @ManyToOne
     @JoinColumn(name = "user_id")
     private User user;
 
+    protected Post(){
+
+    }
     public Long getId(){
         return id;
     }
@@ -29,22 +33,40 @@ public class Post {
         return title;
     }
 
-    public void setTitle(String title){
-        this.title = title;
-    }
-
     public String getContent(){
         return content;
     }
 
-    public void setContent(String content){
-        this.content = content;
-    }
     public User getUser() {
         return user;
     }
 
-    public void setUser(User user) {
-        this.user = user;
+    private static void validateTitle(String title){
+        if(title == null || title.isBlank()){
+            throw new IllegalArgumentException("게시물 제목은 필수입니다.");
+        }
+    }
+
+    private static void validateContent(String content){
+        if(content == null || content.isBlank()){
+            throw new IllegalArgumentException("게시물 내용은 필수입니다.");
+        }
+    }
+    public static Post createPost(String title, String content){
+        validateTitle(title);
+        validateContent(content);
+
+        Post post = new Post();
+        post.title = title;
+        post.content = content;
+        return post;
+    }
+    public void updatePost(String title, String content){
+        validateTitle(title);
+        validateContent(content);
+
+        this.title = title;
+        this.content = content;
     }
 }
+

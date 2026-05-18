@@ -23,6 +23,9 @@ public class Likes {
     @JoinColumn(name = "post_id")
     private Post post;
 
+    protected Likes(){
+
+    }
     public Long getId(){
         return id;
     }
@@ -31,15 +34,28 @@ public class Likes {
         return user;
     }
 
-    public void setUser(User user){
-        this.user = user;
-    }
-
     public Post getPost(){
         return post;
     }
+    public static Likes createLike(User user, Post post){
+        validateUser(user);
+        validatePost(post);
 
-    public void setPost(Post post){
-        this.post = post;
+        Likes like = new Likes();
+        like.user = user;
+        like.post = post;
+        return like;
+    }
+
+    private static void validateUser(User user){
+        if(user == null){
+            throw new IllegalArgumentException("사용자는 필수입니다.");
+        }
+    }
+
+    private static void validatePost(Post post){
+        if(post == null){
+            throw new IllegalArgumentException("게시글은 필수입니다.");
+        }
     }
 }

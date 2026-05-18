@@ -22,7 +22,10 @@ public class Comment {
     @ManyToOne
     @JoinColumn(name = "user_id")
     private User user;
+    protected Comment(){
+    }
 
+    
     public Long getId(){
         return id;
     }
@@ -31,22 +34,36 @@ public class Comment {
         return content;
     }
 
-    public void setContent(String content) {
-        this.content = content;
-    }
-
     public Post getPost(){
         return post;
-    }
-
-    public void setPost(Post post){
-        this.post = post;
     }
 
     public User getUser(){
         return user;
     }
-    public void setUser(User user){
-        this.user = user;
+    private static void validateContent(String content){
+        if(content == null || content.isBlank()){
+            throw new IllegalArgumentException("댓글 내용은 필수입니다.");
+        }
+    }
+    private static void validatePost(Post post){
+        if(post == null){
+            throw new IllegalArgumentException("게시글은 필수입니다.");
+        }
+    }
+    
+    public static Comment createComment(String content, Post post){
+        validateContent(content);
+        validatePost(post);
+
+        Comment comment = new Comment();
+        comment.content = content;
+        comment.post = post;
+        return comment;
+    }
+
+    public void updateComment(String content){
+        validateContent(content);
+        this.content = content;
     }
 }

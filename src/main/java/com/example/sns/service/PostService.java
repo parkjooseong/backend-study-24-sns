@@ -18,9 +18,7 @@ public class PostService {
     }
 
     public PostResponseDto createPost(PostRequestDto requestDto){
-        Post post = new Post();
-        post.setTitle(requestDto.title());
-        post.setContent(requestDto.content());
+        Post post = Post.createPost(requestDto.title(), requestDto.content());
 
         Post savedPost = postRepository.save(post);
         return new PostResponseDto(savedPost);
@@ -42,8 +40,7 @@ public class PostService {
         Post post = postRepository.findById(id)
             .orElseThrow(() -> new IllegalArgumentException("잘못된 번호입니다."));
 
-        post.setTitle(requestDto.title());
-        post.setContent(requestDto.content());
+        post.updatePost(requestDto.title(), requestDto.content());
 
         Post updatedPost = postRepository.save(post);
         return new PostResponseDto(updatedPost);

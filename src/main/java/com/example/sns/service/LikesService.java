@@ -36,9 +36,7 @@ public class LikesService {
             likesRepository.delete(existingLike);
             return new LikesResponseDto("좋아요를 취소했습니다.");
         }else{
-            Likes newLike = new Likes();
-            newLike.setPost(post);
-            newLike.setUser(user);
+            Likes newLike = Likes.createLike(user, post);
             likesRepository.save(newLike);
             return new LikesResponseDto("좋아요를 눌렀습니다.");
         }
