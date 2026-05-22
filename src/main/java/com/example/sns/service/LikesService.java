@@ -6,7 +6,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import com.example.sns.dto.LikesRequestDto;
 import com.example.sns.dto.LikesResponseDto;
 import com.example.sns.entity.Likes;
 import com.example.sns.entity.Post;
@@ -32,14 +31,14 @@ public class LikesService {
         this.userRepository = userRepository;
     }
     @Transactional
-    public LikesResponseDto toggleLike(Long postId, LikesRequestDto requestDto){
+    public LikesResponseDto toggleLike(Long postId, Long userId){
         Post post = postRepository.findById(postId)
             .orElseThrow(() -> new PostNotFoundException("좋아요를 누를 게시글을 찾을 수 없습니다."));
 
-        User user = userRepository.findById(requestDto.userId())
+        User user = userRepository.findById(userId)
             .orElseThrow(() -> new UserNotFoundException("사용자를 찾을 수 없습니다."));
 
-        Optional<Likes> existingLike = likesRepository.findByPostIdAndUserId(postId, requestDto.userId());
+        Optional<Likes> existingLike = likesRepository.findByPostIdAndUserId(postId, userId);
 
         if(existingLike.isPresent()){
             likesRepository.delete(existingLike.get());
