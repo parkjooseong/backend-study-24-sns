@@ -35,7 +35,7 @@ public class FollowController {
 
     @DeleteMapping("/{targetUserId}/follow")
     public ResponseEntity<FollowResponseDto> unfollow(
-        @RequestAttribute("loginId") Long loginUserId,
+        @RequestAttribute("loginUserId") Long loginUserId,
         @PathVariable("targetUserId") Long targetUserId
     ){
         FollowResponseDto responseDto = followService.unfollow(loginUserId, targetUserId);
