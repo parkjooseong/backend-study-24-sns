@@ -10,7 +10,7 @@ import com.example.sns.entity.Follow;
 public interface FollowRepository extends JpaRepository<Follow, Long>{
     Optional<Follow> findByFollowerIdAndFollowingId(Long followerId, Long followingId);
 
-    boolean existsByFollowerAndFollowingId(Long followerId, Long followingId);
+    boolean existsByFollowerIdAndFollowingId(Long followerId, Long followingId);
 
     List<Follow> findAllByFollowerId(Long followerId);
     List<Follow> findAllByFollowingId(Long followingId);

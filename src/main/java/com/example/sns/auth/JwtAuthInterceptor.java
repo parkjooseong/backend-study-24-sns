@@ -5,6 +5,7 @@ import java.io.IOException;
 import org.springframework.stereotype.Component;
 import org.springframework.web.servlet.HandlerInterceptor;
 
+import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
@@ -20,23 +21,55 @@ public class JwtAuthInterceptor implements HandlerInterceptor{
 
     @Override
     public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler) throws IOException {
-        String authorizationHeader = request.getHeader(AUTHORIZATION_HEADER);
-
-        if(authorizationHeader == null || !authorizationHeader.startsWith(BEARER_PREFIX)){
-            writeUnauthorizedResponse(response, "Access Token이 필요합니다.");
+        String token = extractToken(request);
+        
+        if(token == null){
+            handleUnauthorized(request, response, "Access Token이 필요합니다.");
             return false;
         }
 
-        String token = authorizationHeader.substring(BEARER_PREFIX.length());
-
         if(!jwtTokenProvider.validateToken(token)){
-            writeUnauthorizedResponse(response, "유효하지 않은 Access Token입니다. ");
+            handleUnauthorized(request,response, "유효하지 않은 Access Token입니다. ");
             return  false;
         }
 
         Long loginUserId = jwtTokenProvider.getUserId(token);
         request.setAttribute("loginUserId", loginUserId);
         return true;
+    }
+
+    private String extractToken(HttpServletRequest request){
+        String authorizationHeader = request.getHeader(AUTHORIZATION_HEADER);
+
+        if(authorizationHeader != null && authorizationHeader.startsWith(BEARER_PREFIX)){
+            return authorizationHeader.substring(BEARER_PREFIX.length());
+        }
+
+        Cookie[] cookies = request.getCookies();
+
+        if(cookies == null){
+            return null;
+        }
+        for(Cookie cookie : cookies){
+            if(ACCESS_TOKEN_COOKIE_NAME.equals(cookie.getName())){
+                return cookie.getValue();
+            }
+        }
+        return null;
+    }
+
+    private void handleUnauthorized(HttpServletRequest request, HttpServletResponse response, String message) throws IOException{
+        if(isHtmlRequest(request)){
+            response.sendRedirect("/login");
+            return;
+        }
+
+        writeUnauthorizedResponse(response, message);
+    }
+
+    private boolean isHtmlRequest(HttpServletRequest request){
+        String acceptHeader = request.getHeader("Accept");
+        return acceptHeader != null && acceptHeader.contains("text/html");
     }
 
     private void writeUnauthorizedResponse(HttpServletResponse response, String message) throws IOException{

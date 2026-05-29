@@ -14,7 +14,6 @@ import org.springframework.web.bind.annotation.RestController;
 import com.example.sns.dto.FollowCountResponseDto;
 import com.example.sns.dto.FollowResponseDto;
 import com.example.sns.dto.UserResponseDto;
-import com.example.sns.repository.FollowRepository;
 import com.example.sns.service.FollowService;
 
 import lombok.RequiredArgsConstructor;

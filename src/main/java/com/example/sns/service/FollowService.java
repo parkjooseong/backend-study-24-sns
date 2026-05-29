@@ -36,7 +36,7 @@ public class FollowService {
         User follower = findUserById(loginUserId);
         User following = findUserById(targetUserId);
 
-        if(followRepository.existsByFollowerAndFollowingId(loginUserId, targetUserId)) {
+        if(followRepository.existsByFollowerIdAndFollowingId(loginUserId, targetUserId)) {
             throw new FollowException("이미 팔로우한 사용자입니다.");
         }
 

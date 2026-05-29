@@ -16,7 +16,7 @@ import jakarta.persistence.FetchType;
     uniqueConstraints = {
         @UniqueConstraint(
             name = "uk_follower_following",
-            columnNames = {"follower_id", "following _id"}
+            columnNames = {"follower_id", "following_id"}
         )
     }
 )
